@@ -35,34 +35,51 @@ class Form extends Component {
   //--------------------------
 
   insertMembers() {
-    let membertoadd = this.state;
+    let values = this.state;
+    if (
+      values.nome &&
+      values.tel &&
+      values.endereco &&
+      values.cidade &&
+      values.bairro &&
+      values.niver &&
+      values.invited &&
+      values.visiting &&
+      values.preenchido &&
+      values.fonovisita &&
+      values.lider !== ''
+    ) {
+      let membertoadd = this.state;
 
-    let memberinfo = {
-      id: membertoadd.id,
-      data_registro: new Date().toLocaleDateString(),
-      nome: membertoadd.nome,
-      telefone: membertoadd.tel,
-      endereco: membertoadd.endereco,
-      cidade: membertoadd.cidade,
-      bairro: membertoadd.bairro,
-      aniversario: membertoadd.niver,
-      invited: membertoadd.invited,
-      visiting: membertoadd.visiting,
-      acceptcall: membertoadd.acceptcall.value,
-      period: membertoadd.period,
-      data_preenchido: new Date().toLocaleDateString(),
-      preenchido: membertoadd.preenchido,
-      fonovisia: membertoadd.fonovisita,
-      lider: membertoadd.lider,
-    };
+      let memberinfo = {
+        id: membertoadd.id,
+        data_registro: new Date().toLocaleDateString(),
+        nome: membertoadd.nome,
+        telefone: membertoadd.tel,
+        endereco: membertoadd.endereco,
+        cidade: membertoadd.cidade,
+        bairro: membertoadd.bairro,
+        aniversario: membertoadd.niver,
+        invited: membertoadd.invited,
+        visiting: membertoadd.visiting,
+        acceptcall: membertoadd.acceptcall.value,
+        period: membertoadd.period,
+        data_preenchido: new Date().toLocaleDateString(),
+        preenchido: membertoadd.preenchido,
+        fonovisia: membertoadd.fonovisita,
+        lider: membertoadd.lider,
+      };
 
-    fetch("http://localhost:3001/membros", {
-      method: "POST",
-      headers: {
-        "content-type": "application/json",
-      },
-      body: JSON.stringify(memberinfo),
-    }).then(alert("Membro Registrado"));
+      fetch("http://localhost:3001/membros", {
+        method: "POST",
+        headers: {
+          "content-type": "application/json",
+        },
+        body: JSON.stringify(memberinfo),
+      }).then(alert("Membro Registrado"));
+    } else{
+      alert("Campos Obrigatorios Não Preenchidos")
+    }
   }
 
   //--------------------------
