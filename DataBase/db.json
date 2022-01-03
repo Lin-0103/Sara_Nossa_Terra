@@ -1,0 +1,22 @@
+{
+  "membros": [
+    {
+      "id": 0,
+      "data_registro": "",
+      "nome": "",
+      "telefone": "",
+      "endereco": "",
+      "cidade": "",
+      "bairro": "",
+      "aniversario": "",
+      "invited": "",
+      "visiting": "",
+      "acceptcall": "",
+      "period": "",
+      "data_preenchido": "",
+      "preenchido": "",
+      "fonovisia": "",
+      "lider": ""
+    }
+  ]
+}
