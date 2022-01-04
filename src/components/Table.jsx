@@ -1,5 +1,20 @@
 import React, { Component } from "react";
 import "./compoents_style/Table.css";
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, get } from "firebase/database";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBX5gIx4EsjJ_6Sv7iNu76LlZlB58RKzd4",
+  authDomain: "saranossaterra-3cb4d.firebaseapp.com",
+  databaseURL: "https://saranossaterra-3cb4d-default-rtdb.firebaseio.com",
+  projectId: "saranossaterra-3cb4d",
+  storageBucket: "saranossaterra-3cb4d.appspot.com",
+  messagingSenderId: "703610452822",
+  appId: "1:703610452822:web:a39834002e77acd02e74f7",
+  measurementId: "G-SNS80264V6",
+};
+const app = initializeApp(firebaseConfig);
+
 class Table extends Component {
   constructor(props) {
     super(props);
@@ -13,9 +28,26 @@ class Table extends Component {
 
   //---- System Functions
   loadDB() {
-    fetch("http://localhost:3001/membros")
+    const dbref = ref(getDatabase());
+    get(dbref, `membros`)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const memberData = snapshot.val();
+          console.log(memberData)
+          this.setState({ membros: memberData.membros });
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+      console.log(this.state.membros)
+    /*fetch(
+      "https://github.com/Lin-0103/Projeto_Sara_Nossa_Terra/blob/main/DataBase/db.json"
+    )
       .then((res) => res.json())
-      .then((res) => this.setState({ membros: res }));
+      .then((res) => this.setState({ membros: res }));*/
   }
 
   //-----------------
@@ -39,7 +71,7 @@ class Table extends Component {
             <td>{index.period}</td>
           </tr>
         );
-      } else{
+      } else {
         return null;
       }
     });
@@ -58,12 +90,10 @@ class Table extends Component {
   changeRenderInfo(event) {
     let memberinfo = this.state.membros;
     let ParentElement = event.target.parentElement.className;
-    let arrayid = event.target.parentElement.id ;
+    let arrayid = event.target.parentElement.id;
     if (ParentElement === "Intern_info") {
       event.target.parentElement.className = "Member";
-      event.target.parentElement.innerHTML = `<td> ${
-        memberinfo[arrayid].data_registro
-      }</td>
+      event.target.parentElement.innerHTML = `<td> ${memberinfo[arrayid].data_registro}</td>
       <td> ${memberinfo[arrayid].nome}</td>
       <td> ${memberinfo[arrayid].telefone}</td>
       <td> ${memberinfo[arrayid].endereco}</td>
@@ -92,7 +122,6 @@ class Table extends Component {
   //-----------------
   render() {
     return (
-
       <table className="table" id="table">
         <thead className="thead-dark " id="tablehead">
           <tr>

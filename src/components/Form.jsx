@@ -1,11 +1,26 @@
 import React, { Component } from "react";
 import "./compoents_style/Form.css";
+import { initializeApp } from "firebase/app";
+import { getDatabase, ref, set, get } from "firebase/database";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyBX5gIx4EsjJ_6Sv7iNu76LlZlB58RKzd4",
+  authDomain: "saranossaterra-3cb4d.firebaseapp.com",
+  databaseURL: "https://saranossaterra-3cb4d-default-rtdb.firebaseio.com",
+  projectId: "saranossaterra-3cb4d",
+  storageBucket: "saranossaterra-3cb4d.appspot.com",
+  messagingSenderId: "703610452822",
+  appId: "1:703610452822:web:a39834002e77acd02e74f7",
+  measurementId: "G-SNS80264V6",
+};
+const app = initializeApp(firebaseConfig);
 
 class Form extends Component {
   constructor(props) {
     super(props);
 
     this.state = {
+      id: "",
       nome: "",
       tel: "",
       endereco: "",
@@ -33,6 +48,9 @@ class Form extends Component {
   }
 
   //--------------------------
+  componentDidMount() {
+    this.loadindexDB();
+  }
 
   insertMembers() {
     let values = this.state;
@@ -47,12 +65,12 @@ class Form extends Component {
       values.visiting &&
       values.preenchido &&
       values.fonovisita &&
-      values.lider !== ''
+      values.lider !== ""
     ) {
       let membertoadd = this.state;
 
       let memberinfo = {
-        id: membertoadd.id,
+        id: this.state.id + 1,
         data_registro: new Date().toLocaleDateString(),
         nome: membertoadd.nome,
         telefone: membertoadd.tel,
@@ -69,8 +87,7 @@ class Form extends Component {
         fonovisia: membertoadd.fonovisita,
         lider: membertoadd.lider,
       };
-
-      fetch("http://localhost:3001/membros", {
+      /* fetch("http://localhost:3001/membros", {
         method: "POST",
         headers: {
           "content-type": "application/json",
@@ -79,9 +96,80 @@ class Form extends Component {
       }).then(alert("Membro Registrado"));
     } else{
       alert("Campos Obrigatorios Não Preenchidos")
+    }*/
+      this.writeUserData(
+        memberinfo.id,
+        memberinfo.data_registro,
+        memberinfo.nome,
+        memberinfo.telefone,
+        memberinfo.endereco,
+        memberinfo.cidade,
+        memberinfo.bairro,
+        memberinfo.aniversario,
+        memberinfo.invited,
+        memberinfo.visiting,
+        memberinfo.acceptcall,
+        memberinfo.period,
+        memberinfo.data_preenchido,
+        memberinfo.preenchido,
+        memberinfo.fonovisia,
+        memberinfo.lider
+      );
     }
   }
-
+  writeUserData(
+    id,
+    dataregistro,
+    nome,
+    telefone,
+    endereco,
+    cidade,
+    bairro,
+    aniversario,
+    invited,
+    visiting,
+    acceptcall,
+    period,
+    data_preenchido,
+    preenchido,
+    fonovisia,
+    lider
+  ) {
+    const db = getDatabase();
+    set(ref(db, `membros/${this.state.id + 1}`), {
+      id: id,
+      data_registro: dataregistro,
+      nome: nome,
+      telefone: telefone,
+      endereco: endereco,
+      cidade: cidade,
+      bairro: bairro,
+      aniversario: aniversario,
+      invited: invited,
+      visiting: visiting,
+      acceptcall: acceptcall,
+      period: period,
+      data_preenchido: data_preenchido,
+      preenchido: preenchido,
+      fonovisia: fonovisia,
+      lider: lider,
+    });
+  }
+  loadindexDB() {
+    const dbref = ref(getDatabase());
+    get(dbref, `membros/`)
+      .then((snapshot) => {
+        if (snapshot.exists()) {
+          const memberData = snapshot.val();
+          this.setState({ id: memberData.membros[memberData.membros.length -1].id });
+        } else {
+          console.log("No data available");
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
   //--------------------------
   validpass() {
     return this.state.pass === "123";
